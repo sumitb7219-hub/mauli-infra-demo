@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Sample Property Details | Vijay Khavse — Mauli Infra Demo</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div id="global-header"></div>
+
+  <main class="section">
+    <div class="container" id="property-detail-mount"></div>
+  </main>
+
+  <div id="global-footer"></div>
+
+  <script src="./app.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const params = new URLSearchParams(window.location.search);
+      const slug = params.get("slug");
+      const prop = DEMO_PROPERTIES.find(p => p.slug === slug) || DEMO_PROPERTIES[0];
+
+      document.title = `${prop.title} (Demo Sample) | Mauli Infra Portfolio`;
+
+      initSharedLayout("properties", [
+        { label: "Property Finder", href: "./properties.html" },
+        { label: prop.title, href: `./property-detail.html?slug=${prop.slug}` }
+      ]);
+
+      const estLoan = Math.round(prop.price * 0.8);
+      const emiInfo = calculateEMI(estLoan, 8.75, 20);
+      const similarProps = DEMO_PROPERTIES.filter(p => p.id !== prop.id && (p.location.area === prop.location.area || p.propertyType === prop.propertyType)).slice(0, 3);
+
+      const waMsg = `Hello Vijay Khavse, I am viewing the demo sample listing "${prop.title}" (${formatINRLakhCrore(prop.price)}) on your Mauli Infra portfolio and would like to discuss similar verified options.`;
+
+      const mount = document.getElementById("property-detail-mount");
+      mount.innerHTML = `
+        <!-- Persistent Demo Disclaimer Banner -->
+        <div class="card card-body" style="background:var(--amber-bg);border-color:var(--amber-border);margin-bottom:1.5rem;padding:0.95rem 1.25rem;">
+          <strong style="color:var(--amber-text);font-size:0.85rem;">DEMO LISTING NOTICE:</strong>
+          <span style="font-size:0.84rem;color:var(--amber-text);">
+            ${prop.demoDisclaimer} This entry exists solely to demonstrate layout, EMI integration, and enquiry workflows.
+          </span>
+        </div>
+
+        <div class="grid-2" style="align-items:start;margin-bottom:2.5rem;">
+          <!-- Accessible Gallery Switcher -->
+          <div class="card">
+            <div class="prop-media" id="detail-gallery-stage" style="height:310px;">
+              ${renderArchitecturalSVG(prop.svgTheme, `${prop.id.toUpperCase()} • VIEW 01`)}
+              <div class="prop-media-overlay-top">
+                <span class="tag-type">${prop.propertyType} • ${prop.purpose}</span>
+                <span class="demo-pill">ILLUSTRATIVE RENDER</span>
+              </div>
+              <div class="prop-media-caption">Illustrative image — not an actual project photograph</div>
+            </div>
+            <div style="padding:1rem;background:var(--bg-stone);display:flex;gap:0.5rem;flex-wrap:wrap;" role="group" aria-label="Switch illustrative diagram view">
+              <button type="button" class="btn btn-primary btn-sm gallery-view-btn" data-theme="${prop.svgTheme}" data-label="${prop.id.toUpperCase()} • CAD PLAN">01. Layout Plan</button>
+              <button type="button" class="btn btn-outline btn-sm gallery-view-btn" data-theme="grid-layout" data-label="${prop.id.toUpperCase()} • SECTOR GRID">02. Sector Grid</button>
+              <button type="button" class="btn btn-outline btn-sm gallery-view-btn" data-theme="elevation-apt" data-label="${prop.id.toUpperCase()} • DIMENSION REF">03. Massing Diagram</button>
+            </div>
+          </div>
+
+          <!-- Key Specifications & CTAs -->
+          <div class="card card-body">
+            <div style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.65rem;">
+              <span class="demo-badge-inline">Illustrative Price for Demo Only</span>
+              <span class="verified-pending-badge">Status: ${prop.availabilityLabel}</span>
+            </div>
+            <h1 class="serif-heading" style="font-size:2rem;color:var(--navy-900);margin-bottom:0.35rem;">${prop.title}</h1>
+            <p style="font-size:0.88rem;color:var(--slate-600);margin-bottom:1.25rem;">${prop.location.address}</p>
+
+            <div style="background:var(--bg-stone);padding:1.15rem;border-radius:var(--radius-sm);margin-bottom:1.25rem;">
+              <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;">
+                <div>
+                  <span style="font-size:0.75rem;color:var(--slate-600);display:block;">Indicative Total Sample Price</span>
+                  <span class="mono-num" style="font-size:1.75rem;font-weight:700;color:var(--navy-900);">${formatINRLakhCrore(prop.price)}</span>
+                  <span class="mono-num" style="font-size:0.82rem;color:var(--slate-600);margin-left:6px;">(${formatINR(prop.price)})</span>
+                </div>
+                <div style="text-align:right;">
+                  <span style="font-size:0.75rem;color:var(--slate-600);display:block;">Unit Rate</span>
+                  <strong style="font-size:0.88rem;color:var(--copper-600);">${prop.unitPriceLabel}</strong>
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.75rem;margin-top:0.9rem;padding-top:0.9rem;border-top:1px solid var(--bg-stone-dark);font-size:0.82rem;">
+                <div>
+                  <span style="color:var(--slate-500);display:block;">Total Area</span>
+                  <strong>${prop.areaValue.toLocaleString("en-IN")} ${prop.areaUnit}</strong>
+                </div>
+                <div>
+                  <span style="color:var(--slate-500);display:block;">Configuration</span>
+                  <strong>${prop.bedrooms ? `${prop.bedrooms} BHK` : "Plot / Land Parcel"}</strong>
+                </div>
+                <div>
+                  <span style="color:var(--slate-500);display:block;">Indicative EMI</span>
+                  <strong class="mono-num">${formatINR(emiInfo.emi)}/mo</strong>
+                </div>
+              </div>
+            </div>
+
+            <p style="font-size:0.9rem;color:var(--slate-700);margin-bottom:1.25rem;">${prop.description}</p>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.65rem;margin-bottom:0.65rem;">
+              <a href="${buildWhatsAppURL(waMsg)}" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp">Ask on WhatsApp</a>
+              <a href="./contact.html?tab=visit&property=${encodeURIComponent(prop.title)}" class="btn btn-copper">Request Site Visit</a>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.65rem;">
+              <a href="./emi-calculator.html?price=${prop.price}&title=${encodeURIComponent(prop.title)}" class="btn btn-primary">Calculate EMI Scenarios</a>
+              <a href="./contact.html?property=${encodeURIComponent(prop.title)}" class="btn btn-outline">Send Enquiry Form</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Features, Payment Plan Placeholder & Location Section -->
+        <div class="grid-3" style="margin-bottom:3rem;">
+          <div class="card card-body">
+            <span class="eyebrow">Sample Specifications</span>
+            <h2 class="serif-heading" style="font-size:1.45rem;margin-bottom:0.75rem;">Illustrative Features</h2>
+            <ul style="padding-left:1.1rem;font-size:0.88rem;color:var(--slate-700);display:flex;flex-direction:column;gap:0.45rem;">
+              ${prop.features.map(f => `<li>${f}</li>`).join("")}
+            </ul>
+          </div>
+
+          <div class="card card-body">
+            <span class="eyebrow">Payment & Milestones</span>
+            <h2 class="serif-heading" style="font-size:1.45rem;margin-bottom:0.75rem;">Payment Plan Schedule</h2>
+            <div class="tbc-box">
+              <strong>To Be Confirmed by Mauli Infra</strong>
+              Official payment schedules, booking slab percentages, or instalment options are not fabricated in demo mode. Once supplied by Mauli Infra, approved payment plans will be displayed here.
+            </div>
+          </div>
+
+          <div class="card card-body">
+            <span class="eyebrow">Corridor Context</span>
+            <h2 class="serif-heading" style="font-size:1.45rem;margin-bottom:0.75rem;">Map & Location Status</h2>
+            <div class="tbc-box">
+              <strong>Unpinned Illustrative Corridor: ${prop.location.area}</strong>
+              To prevent misleading visitors, no fabricated GPS pin is placed on a live map. Verified Google Maps coordinates will be linked once Mauli Infra supplies official site data.
+            </div>
+          </div>
+        </div>
+
+        <!-- Similar Sample Properties -->
+        <div>
+          <h2 class="serif-heading" style="font-size:1.85rem;color:var(--navy-900);margin-bottom:1.25rem;">
+            Similar Sample Listings (Based on Corridor or Property Type)
+          </h2>
+          <div class="grid-3">
+            ${similarProps.map(sp => renderPropertyCard(sp)).join("")}
+          </div>
+        </div>
+      `;
+
+      const stage = document.getElementById("detail-gallery-stage");
+      document.querySelectorAll(".gallery-view-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          document.querySelectorAll(".gallery-view-btn").forEach(b => {
+            b.classList.remove("btn-primary");
+            b.classList.add("btn-outline");
+          });
+          btn.classList.remove("btn-outline");
+          btn.classList.add("btn-primary");
+          stage.innerHTML = `
+            ${renderArchitecturalSVG(btn.dataset.theme, btn.dataset.label)}
+            <div class="prop-media-overlay-top">
+              <span class="tag-type">${prop.propertyType} • ${prop.purpose}</span>
+              <span class="demo-pill">ILLUSTRATIVE RENDER</span>
+            </div>
+            <div class="prop-media-caption">Illustrative image — not an actual project photograph</div>
+          `;
+        });
+      });
+    });
+  </script>
+</body>
+</html>

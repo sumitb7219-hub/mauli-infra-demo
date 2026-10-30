@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Contact, Site Visit & Demo Disclaimer | Vijay Khavse — Mauli Infra Demo</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div id="global-header"></div>
+
+  <main class="section">
+    <div class="container">
+      <div class="grid-2" style="align-items:start;margin-bottom:3.5rem;">
+        <!-- Left Column: Direct Advisor Contact Cards -->
+        <div>
+          <span class="eyebrow">Direct Advisor Desk</span>
+          <h1 class="serif-heading" style="font-size:2.35rem;color:var(--navy-900);margin-bottom:0.4rem;">
+            Connect with Vijay Khavse
+          </h1>
+          <p style="font-size:0.9rem;color:var(--slate-600);margin-bottom:1.5rem;">
+            Use direct call, WhatsApp, or email actions—or test the consent-aware Enquiry and Site Visit forms in demonstration preview mode.
+          </p>
+
+          <div class="card card-body" style="margin-bottom:1.25rem;">
+            <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:0.75rem;">
+              <div>
+                <h2 class="serif-heading" style="font-size:1.45rem;color:var(--navy-900);">Vijay Khavse</h2>
+                <p style="font-size:0.84rem;color:var(--copper-600);font-weight:600;">Business Manager — Mauli Infra</p>
+              </div>
+              <span class="demo-badge-inline">Demo Profile</span>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:0.65rem;font-size:0.88rem;margin-bottom:1.25rem;">
+              <div>
+                <span style="color:var(--slate-500);display:block;font-size:0.75rem;">Primary Phone Numbers (Click to Call):</span>
+                <a href="tel:9022558612" class="mono-num" style="font-weight:700;color:var(--navy-900);text-decoration:underline;">+91 9022558612</a>
+                <span style="margin:0 6px;color:var(--slate-400);">|</span>
+                <a href="tel:7387282862" class="mono-num" style="font-weight:700;color:var(--navy-900);text-decoration:underline;">+91 7387282862</a>
+              </div>
+              <div>
+                <span style="color:var(--slate-500);display:block;font-size:0.75rem;">Official Email Address:</span>
+                <a href="mailto:vijaykhavse93@gmail.com" style="font-weight:600;color:var(--navy-900);text-decoration:underline;">vijaykhavse93@gmail.com</a>
+              </div>
+            </div>
+
+            <div style="display:flex;flex-wrap:wrap;gap:0.6rem;">
+              <a href="tel:9022558612" class="btn btn-primary btn-sm">Call 9022558612</a>
+              <a href="#" id="contact-wa-btn" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp btn-sm">Message on WhatsApp</a>
+              <a href="mailto:vijaykhavse93@gmail.com" class="btn btn-outline btn-sm">Send Email</a>
+            </div>
+          </div>
+
+          <div class="tbc-box">
+            <strong>Demo Mode Submission Notice</strong>
+            Forms on this page operate in <strong>local preview mode only</strong>. Submitting an enquiry or site visit request validates your inputs and generates a realistic confirmation summary on-screen without transmitting personal data to external servers or storing it in browser localStorage.
+          </div>
+        </div>
+
+        <!-- Right Column: Tabbed Enquiry & Site Visit Forms -->
+        <div class="card card-body">
+          <div style="display:flex;gap:0.5rem;margin-bottom:1.5rem;border-bottom:1px solid var(--slate-200);padding-bottom:0.85rem;" role="tablist">
+            <button type="button" id="tab-btn-enquiry" class="btn btn-primary btn-sm" role="tab" aria-selected="true">01. Property Enquiry</button>
+            <button type="button" id="tab-btn-visit" class="btn btn-outline btn-sm" role="tab" aria-selected="false">02. Request a Site Visit</button>
+          </div>
+
+          <!-- FORM 1: Property Enquiry -->
+          <form id="form-enquiry" novalidate>
+            <h2 class="serif-heading" style="font-size:1.55rem;margin-bottom:0.35rem;">Send a Contextual Enquiry</h2>
+            <p style="font-size:0.82rem;color:var(--slate-600);margin-bottom:1rem;">
+              Share your preferred corridor and budget band. No sensitive financial identifiers are collected.
+            </p>
+
+            <div class="form-group">
+              <label class="form-label" for="enq-name">Your Full Name *</label>
+              <input type="text" id="enq-name" class="form-control" required placeholder="e.g., Rahul Deshmukh" />
+              <div class="form-error" id="err-enq-name">Please enter your name (minimum 2 characters).</div>
+            </div>
+
+            <div class="grid-2" style="gap:0.85rem;">
+              <div class="form-group">
+                <label class="form-label" for="enq-method">Preferred Contact Method *</label>
+                <select id="enq-method" class="form-control">
+                  <option value="Phone Call">Phone Call</option>
+                  <option value="WhatsApp">WhatsApp</option>
+                  <option value="Email">Email</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="enq-contact">Phone Number or Email *</label>
+                <input type="text" id="enq-contact" class="form-control" required placeholder="10-digit mobile or email" />
+                <div class="form-error" id="err-enq-contact">Please enter a valid 10-digit phone number or email address.</div>
+              </div>
+            </div>
+
+            <div class="grid-2" style="gap:0.85rem;">
+              <div class="form-group">
+                <label class="form-label" for="enq-property">Property / Project of Interest (Optional)</label>
+                <select id="enq-property" class="form-control">
+                  <option value="General Portfolio Enquiry">General Advisory Enquiry</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="enq-budget">Indicative Budget Band (Optional)</label>
+                <select id="enq-budget" class="form-control">
+                  <option value="Not specified">Select Budget Band</option>
+                  <option value="₹15 Lakh – ₹25 Lakh">₹15 Lakh – ₹25 Lakh</option>
+                  <option value="₹25 Lakh – ₹45 Lakh">₹25 Lakh – ₹45 Lakh</option>
+                  <option value="₹45 Lakh – ₹65 Lakh">₹45 Lakh – ₹65 Lakh</option>
+                  <option value="₹65 Lakh+">₹65 Lakh+</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="enq-message">Message or Requirement Notes (Optional)</label>
+              <textarea id="enq-message" class="form-control" rows="3" placeholder="Mention plot size, corridor preference, or questions..."></textarea>
+            </div>
+
+            <div class="form-group">
+              <label style="display:flex;align-items:flex-start;gap:8px;font-size:0.8rem;color:var(--slate-700);cursor:pointer;">
+                <input type="checkbox" id="enq-consent" style="margin-top:3px;width:16px;height:16px;accent-color:var(--copper-600);" />
+                <span>I explicitly consent to being contacted regarding this property enquiry. I understand this is a demonstration preview and does not transmit live data to Mauli Infra. *</span>
+              </label>
+              <div class="form-error" id="err-enq-consent">Explicit contact consent is required before preparing an enquiry.</div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width:100%;">Preview Enquiry Submission (Demo Mode)</button>
+          </form>
+
+          <!-- FORM 2: Site Visit Request -->
+          <form id="form-visit" novalidate style="display:none;">
+            <h2 class="serif-heading" style="font-size:1.55rem;margin-bottom:0.35rem;">Request a Guided Site Visit</h2>
+            <p style="font-size:0.82rem;color:var(--slate-600);margin-bottom:1rem;">
+              Select a future date and preferred time slot. In production, the advisory team must confirm availability.
+            </p>
+
+            <div class="form-group">
+              <label class="form-label" for="vis-property">Select Sample Property / Corridor (Optional)</label>
+              <select id="vis-property" class="form-control">
+                <option value="General Corridor Exploration">General Corridor Tour (Wardha Rd / MIHAN / Besa / Butibori)</option>
+              </select>
+            </div>
+
+            <div class="grid-2" style="gap:0.85rem;">
+              <div class="form-group">
+                <label class="form-label" for="vis-date">Preferred Visit Date (Future Date) *</label>
+                <input type="date" id="vis-date" class="form-control" required />
+                <div class="form-error" id="err-vis-date">Please select a valid date today or in the future.</div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="vis-time">Preferred Time Window *</label>
+                <select id="vis-time" class="form-control">
+                  <option value="Morning (10:00 AM – 12:30 PM)">Morning (10:00 AM – 12:30 PM)</option>
+                  <option value="Afternoon (12:30 PM – 03:30 PM)">Afternoon (12:30 PM – 03:30 PM)</option>
+                  <option value="Evening (03:30 PM – 06:00 PM)">Evening (03:30 PM – 06:00 PM)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="grid-2" style="gap:0.85rem;">
+              <div class="form-group">
+                <label class="form-label" for="vis-name">Your Full Name *</label>
+                <input type="text" id="vis-name" class="form-control" required placeholder="Your full name" />
+                <div class="form-error" id="err-vis-name">Please enter your full name.</div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="vis-phone">Mobile Number *</label>
+                <input type="tel" id="vis-phone" class="form-control" required placeholder="10-digit mobile number" />
+                <div class="form-error" id="err-vis-phone">Please enter a valid 10-digit mobile number.</div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label style="display:flex;align-items:flex-start;gap:8px;font-size:0.8rem;color:var(--slate-700);cursor:pointer;">
+                <input type="checkbox" id="vis-consent" style="margin-top:3px;width:16px;height:16px;accent-color:var(--copper-600);" />
+                <span>I consent to being contacted to coordinate this site visit. I understand no live appointment is booked in demo mode. *</span>
+              </label>
+              <div class="form-error" id="err-vis-consent">Please tick the consent box to proceed.</div>
+            </div>
+
+            <button type="submit" class="btn btn-copper" style="width:100%;">Prepare Site Visit Request (Demo Mode)</button>
+          </form>
+
+          <!-- Local-Only Demo Confirmation Box -->
+          <div id="demo-form-output" style="display:none;margin-top:1.25rem;background:var(--emerald-bg);border:1px solid var(--emerald-border);color:var(--emerald-text);padding:1.15rem;border-radius:var(--radius-sm);"></div>
+        </div>
+      </div>
+
+      <!-- Page 12: Privacy, Terms, Demo Disclaimer & Missing Inputs Checklist -->
+      <section id="disclaimer" class="card card-body section-stone" style="margin-bottom:2rem;">
+        <span class="eyebrow">Governance, Disclaimers & Production Readiness</span>
+        <h2 class="serif-heading" style="font-size:1.95rem;color:var(--navy-900);margin-bottom:1rem;">
+          Demo Disclaimer, Draft Policies & Missing Inputs Checklist
+        </h2>
+
+        <div class="grid-3" style="margin-bottom:1.5rem;">
+          <div id="privacy" class="card card-body">
+            <h3 class="serif-heading" style="font-size:1.3rem;margin-bottom:0.4rem;">Draft Privacy Notice (Demo)</h3>
+            <p style="font-size:0.82rem;color:var(--slate-600);">
+              This prototype does not persist form inputs to any backend database or browser storage, nor does it request government IDs (PAN/Aadhaar) or bank credentials. Before production launch, Mauli Infra legal review must define lead ownership, retention periods, and consent wording.
+            </p>
+          </div>
+
+          <div id="terms" class="card card-body">
+            <h3 class="serif-heading" style="font-size:1.3rem;margin-bottom:0.4rem;">Draft Terms of Use (Demo)</h3>
+            <p style="font-size:0.82rem;color:var(--slate-600);">
+              All sample listings, plot dimensions, unit prices, and EMI figures are illustrative examples created for software evaluation. Nothing on this site constitutes a binding real-estate offer, RERA disclosure, or loan sanction.
+            </p>
+          </div>
+
+          <div class="card card-body">
+            <h3 class="serif-heading" style="font-size:1.3rem;margin-bottom:0.4rem;">Demo Limitations</h3>
+            <p style="font-size:0.82rem;color:var(--slate-600);">
+              Implemented on the front end: multi-page advisor architecture, property filtering, 3-property comparison, synchronized EMI math, and form validation. Simulated: backend CRM lead delivery and live inventory sync.
+            </p>
+          </div>
+        </div>
+
+        <div class="card card-body">
+          <h3 class="serif-heading" style="font-size:1.4rem;color:var(--navy-900);margin-bottom:0.6rem;">
+            Checklist of Missing Inputs Required from Mauli Infra for Production Launch
+          </h3>
+          <div class="grid-2" style="font-size:0.84rem;color:var(--slate-700);">
+            <ul style="padding-left:1.1rem;display:flex;flex-direction:column;gap:0.35rem;">
+              <li><strong>Brand Assets:</strong> Official Mauli Infra SVG/PNG logo, brand colour guidelines, and domain/subdomain choice.</li>
+              <li><strong>Advisor Verification:</strong> Approved portrait photo, verified bio, spoken languages, permissioned client testimonials, and verified 800+ families metric sign-off.</li>
+            </ul>
+            <ul style="padding-left:1.1rem;display:flex;flex-direction:column;gap:0.35rem;">
+              <li><strong>Verified Inventory:</strong> Official project names, RERA numbers, approved price lists, plot sizes, site photos, and GPS map links.</li>
+              <li><strong>Operations & Lead Routing:</strong> Confirmation of which phone/WhatsApp/CRM endpoint receives live enquiries and site-visit requests.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div id="global-footer"></div>
+
+  <script src="./app.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      initSharedLayout("contact", [{ label: "Contact & Site Visit", href: "./contact.html" }]);
+
+      document.getElementById("contact-wa-btn").href = buildWhatsAppURL();
+
+      // Populate property dropdowns
+      const enqSelect = document.getElementById("enq-property");
+      const visSelect = document.getElementById("vis-property");
+      DEMO_PROPERTIES.forEach(p => {
+        const opt1 = document.createElement("option");
+        opt1.value = p.title;
+        opt1.textContent = `${p.title} (${formatINRLakhCrore(p.price)})`;
+        enqSelect.appendChild(opt1);
+
+        const opt2 = opt1.cloneNode(true);
+        visSelect.appendChild(opt2);
+      });
+
+      // Set min date on Site Visit picker to today
+      const todayStr = new Date().toISOString().split("T")[0];
+      const visDateInput = document.getElementById("vis-date");
+      visDateInput.min = todayStr;
+      visDateInput.value = todayStr;
+
+      // Tab Switching
+      const btnEnq = document.getElementById("tab-btn-enquiry");
+      const btnVis = document.getElementById("tab-btn-visit");
+      const formEnq = document.getElementById("form-enquiry");
+      const formVis = document.getElementById("form-visit");
+      const outBox = document.getElementById("demo-form-output");
+
+      function switchTab(mode) {
+        outBox.style.display = "none";
+        if (mode === "visit") {
+          formEnq.style.display = "none";
+          formVis.style.display = "block";
+          btnVis.classList.replace("btn-outline", "btn-primary");
+          btnEnq.classList.replace("btn-primary", "btn-outline");
+        } else {
+          formVis.style.display = "none";
+          formEnq.style.display = "block";
+          btnEnq.classList.replace("btn-outline", "btn-primary");
+          btnVis.classList.replace("btn-primary", "btn-outline");
+        }
+      }
+
+      btnEnq.addEventListener("click", () => switchTab("enquiry"));
+      btnVis.addEventListener("click", () => switchTab("visit"));
+
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("tab") === "visit") switchTab("visit");
+      if (params.get("property")) {
+        const propParam = params.get("property");
+        [enqSelect, visSelect].forEach(sel => {
+          const exists = Array.from(sel.options).some(o => o.value === propParam);
+          if (!exists) {
+            const customOpt = document.createElement("option");
+            customOpt.value = propParam;
+            customOpt.textContent = propParam;
+            sel.appendChild(customOpt);
+          }
+          sel.value = propParam;
+        });
+      }
+
+      // Enquiry Validation
+      formEnq.addEventListener("submit", e => {
+        e.preventDefault();
+        let valid = true;
+        const name = document.getElementById("enq-name").value.trim();
+        const contact = document.getElementById("enq-contact").value.trim();
+        const consent = document.getElementById("enq-consent").checked;
+
+        document.getElementById("err-enq-name").style.display = name.length < 2 ? "block" : "none";
+        if (name.length < 2) valid = false;
+
+        const isPhoneOrEmail = /^[6-9]\d{9}$/.test(contact) || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact);
+        document.getElementById("err-enq-contact").style.display = !isPhoneOrEmail ? "block" : "none";
+        if (!isPhoneOrEmail) valid = false;
+
+        document.getElementById("err-enq-consent").style.display = !consent ? "block" : "none";
+        if (!consent) valid = false;
+
+        if (!valid) return;
+
+        const waPrefill = `Hello Vijay Khavse, my name is ${name}. I am enquiring about "${enqSelect.value}" (Budget: ${document.getElementById("enq-budget").value}). Please connect via ${document.getElementById("enq-method").value} (${contact}).`;
+
+        outBox.style.display = "block";
+        outBox.innerHTML = `
+          <strong style="display:block;font-size:0.95rem;margin-bottom:0.35rem;">✓ Demo Enquiry Preview Prepared (Not Sent to Live Server)</strong>
+          <p style="font-size:0.84rem;margin-bottom:0.75rem;">
+            In demonstration mode, no personal data is transmitted or stored. Below is the structured payload prepared for <strong>${name}</strong> regarding <strong>${enqSelect.value}</strong>.
+          </p>
+          <a href="${buildWhatsAppURL(waPrefill)}" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp btn-sm">
+            Optional: Open Pre-Filled WhatsApp Message Instead →
+          </a>
+        `;
+      });
+
+      // Site Visit Validation
+      formVis.addEventListener("submit", e => {
+        e.preventDefault();
+        let valid = true;
+        const dateVal = visDateInput.value;
+        const name = document.getElementById("vis-name").value.trim();
+        const phone = document.getElementById("vis-phone").value.trim();
+        const consent = document.getElementById("vis-consent").checked;
+
+        const isFutureOrToday = dateVal && dateVal >= todayStr;
+        document.getElementById("err-vis-date").style.display = !isFutureOrToday ? "block" : "none";
+        if (!isFutureOrToday) valid = false;
+
+        document.getElementById("err-vis-name").style.display = name.length < 2 ? "block" : "none";
+        if (name.length < 2) valid = false;
+
+        const validPhone = /^[6-9]\d{9}$/.test(phone);
+        document.getElementById("err-vis-phone").style.display = !validPhone ? "block" : "none";
+        if (!validPhone) valid = false;
+
+        document.getElementById("err-vis-consent").style.display = !consent ? "block" : "none";
+        if (!consent) valid = false;
+
+        if (!valid) return;
+
+        const timeSlot = document.getElementById("vis-time").value;
+        const waVisitMsg = `Hello Vijay Khavse, I would like to request a site visit for "${visSelect.value}" on ${dateVal} (${timeSlot}). Name: ${name}, Phone: ${phone}.`;
+
+        outBox.style.display = "block";
+        outBox.innerHTML = `
+          <strong style="display:block;font-size:0.95rem;margin-bottom:0.35rem;">✓ Request Prepared in Demo — No Live Appointment Has Been Booked</strong>
+          <p style="font-size:0.84rem;margin-bottom:0.75rem;">
+            Requested Slot: <strong>${dateVal} (${timeSlot})</strong> for <strong>${visSelect.value}</strong>. In production, the Mauli Infra advisory team must confirm availability.
+          </p>
+          <a href="${buildWhatsAppURL(waVisitMsg)}" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp btn-sm">
+            Share Site Visit Request via WhatsApp →
+          </a>
+        `;
+      });
+    });
+  </script>
+</body>
+</html>

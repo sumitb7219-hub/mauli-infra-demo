@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>EMI Calculator & Affordability Estimator | Vijay Khavse — Mauli Infra Demo</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div id="global-header"></div>
+
+  <main class="section">
+    <div class="container">
+      <div style="max-width:780px;margin-bottom:2rem;">
+        <span class="eyebrow">Transparent Property-Finance Tools</span>
+        <h1 class="serif-heading" style="font-size:2.4rem;color:var(--navy-900);margin-bottom:0.4rem;">
+          Indicative EMI Calculator & Scenario Planner
+        </h1>
+        <p style="font-size:0.9rem;color:var(--slate-600);">
+          Estimate monthly loan repayments, synchronize down-payment percentages, and compare up to three scenarios side by side. <strong>Indicative estimate only</strong> — not a bank sanction or financial advice.
+        </p>
+      </div>
+
+      <!-- Context Banner if deep-linked from a property -->
+      <div id="emi-property-context" class="card card-body" style="display:none;background:var(--copper-100);border-color:var(--copper-500);margin-bottom:1.5rem;padding:0.9rem 1.25rem;"></div>
+
+      <div class="grid-2" style="align-items:start;margin-bottom:2.5rem;">
+        <!-- Left Column: Calculator Inputs -->
+        <section class="card card-body" aria-label="EMI Calculator Inputs">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+            <span class="demo-badge-inline">Demo Example Values Loaded</span>
+            <button type="button" id="emi-reset-btn" class="btn btn-outline btn-sm">Reset Defaults</button>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="input-prop-price">Property Value / Price (₹)</label>
+            <input type="number" id="input-prop-price" class="form-control mono-num" value="3000000" min="100000" max="500000000" step="50000" />
+            <input type="range" id="slider-prop-price" class="range-slider" min="500000" max="20000000" step="100000" value="3000000" style="margin-top:0.4rem;" />
+            <div style="display:flex;justify-content:space-between;font-size:0.75rem;color:var(--slate-500);">
+              <span>₹5 Lakh</span>
+              <span id="price-readable" style="font-weight:700;color:var(--navy-900);">₹30.00 Lakh</span>
+              <span>₹2 Cr+</span>
+            </div>
+          </div>
+
+          <div class="grid-2" style="gap:0.85rem;">
+            <div class="form-group">
+              <label class="form-label" for="input-dp-amount">Down Payment (₹)</label>
+              <input type="number" id="input-dp-amount" class="form-control mono-num" value="600000" min="0" step="25000" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="input-dp-percent">Down Payment (%)</label>
+              <input type="number" id="input-dp-percent" class="form-control mono-num" value="20" min="0" max="95" step="1" />
+            </div>
+          </div>
+          <div id="dp-error" class="form-error" style="margin-top:-0.6rem;margin-bottom:0.85rem;">Down payment cannot be negative or exceed property price.</div>
+
+          <div class="form-group">
+            <label class="form-label" for="input-loan-amount">Derived Principal Loan Amount (₹)</label>
+            <input type="number" id="input-loan-amount" class="form-control mono-num" value="2400000" readonly style="background:var(--bg-stone);font-weight:700;" />
+            <span style="font-size:0.74rem;color:var(--slate-500);">Automatically calculated as Property Price minus Down Payment.</span>
+          </div>
+
+          <div class="grid-2" style="gap:0.85rem;">
+            <div class="form-group">
+              <label class="form-label" for="input-rate">Annual Interest Rate (%)</label>
+              <input type="number" id="input-rate" class="form-control mono-num" value="8.75" min="0" max="25" step="0.05" />
+              <input type="range" id="slider-rate" class="range-slider" min="0" max="18" step="0.1" value="8.75" style="margin-top:0.35rem;" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="input-tenure">Loan Tenure (Years)</label>
+              <input type="number" id="input-tenure" class="form-control mono-num" value="20" min="1" max="30" step="1" />
+              <input type="range" id="slider-tenure" class="range-slider" min="1" max="30" step="1" value="20" style="margin-top:0.35rem;" />
+            </div>
+          </div>
+          <p style="font-size:0.76rem;color:var(--slate-600);">
+            Note: Stamp duty, registration, GST, and lender processing fees are excluded from this indicative EMI calculation.
+          </p>
+        </section>
+
+        <!-- Right Column: EMI Output & Breakdown -->
+        <section class="card card-body" style="background:var(--navy-900);color:#FFFFFF;" aria-live="polite">
+          <span class="demo-pill">INDICATIVE ESTIMATE ONLY</span>
+          <div style="margin:1rem 0 1.25rem;">
+            <div style="font-size:0.82rem;color:#CBD5E1;">Estimated Monthly EMI</div>
+            <div id="out-emi" class="mono-num" style="font-size:2.65rem;font-weight:700;color:#FDBA74;line-height:1.15;">₹21,209</div>
+            <div id="out-tenure-months" style="font-size:0.78rem;color:#94A3B8;margin-top:0.2rem;">Across 240 monthly instalments</div>
+          </div>
+
+          <!-- Visual Principal vs Interest Bar -->
+          <div style="margin-bottom:1.25rem;">
+            <div style="display:flex;justify-content:space-between;font-size:0.76rem;margin-bottom:0.35rem;">
+              <span id="bar-label-principal" style="color:#E2E8F0;">Principal: 47%</span>
+              <span id="bar-label-interest" style="color:#FDBA74;">Total Interest: 53%</span>
+            </div>
+            <div style="height:12px;background:rgba(255,255,255,0.12);border-radius:999px;overflow:hidden;display:flex;">
+              <div id="bar-principal" style="width:47%;background:#38BDF8;height:100%;"></div>
+              <div id="bar-interest" style="width:53%;background:#FDBA74;height:100%;"></div>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.85rem;background:rgba(255,255,255,0.06);padding:1rem;border-radius:var(--radius-sm);font-size:0.84rem;margin-bottom:1.25rem;">
+            <div>
+              <span style="color:#94A3B8;display:block;font-size:0.74rem;">Principal Loan Amount</span>
+              <strong id="out-principal" class="mono-num" style="font-size:1rem;">₹24,00,000</strong>
+            </div>
+            <div>
+              <span style="color:#94A3B8;display:block;font-size:0.74rem;">Down Payment</span>
+              <strong id="out-dp" class="mono-num" style="font-size:1rem;">₹6,00,000</strong>
+            </div>
+            <div>
+              <span style="color:#94A3B8;display:block;font-size:0.74rem;">Total Interest Payable</span>
+              <strong id="out-interest" class="mono-num" style="font-size:1rem;color:#FDBA74;">₹26,90,192</strong>
+            </div>
+            <div>
+              <span style="color:#94A3B8;display:block;font-size:0.74rem;">Total Amount Payable (Loan + Interest)</span>
+              <strong id="out-total" class="mono-num" style="font-size:1rem;">₹50,90,192</strong>
+            </div>
+          </div>
+
+          <div style="display:flex;flex-wrap:wrap;gap:0.65rem;">
+            <a href="./contact.html" id="emi-enquire-cta" class="btn btn-copper btn-sm" style="flex:1;">Discuss Scenario with Vijay Khavse</a>
+            <a href="./properties.html" class="btn btn-outline-light btn-sm">Find Matching Properties</a>
+          </div>
+        </section>
+      </div>
+
+      <!-- 3-Scenario Side-by-Side Comparison -->
+      <section class="card card-body" style="margin-bottom:2.5rem;">
+        <span class="eyebrow">Scenario Comparison Mode</span>
+        <h2 class="serif-heading" style="font-size:1.75rem;color:var(--navy-900);margin-bottom:0.35rem;">
+          Compare 3 Repayment Scenarios Side by Side
+        </h2>
+        <p style="font-size:0.86rem;color:var(--slate-600);margin-bottom:1.25rem;">
+          See how adjusting your tenure or down payment changes your monthly EMI and total interest outgo for the selected property value.
+        </p>
+        <div style="overflow-x:auto;">
+          <table class="data-table" id="scenario-comparison-table"></table>
+        </div>
+      </section>
+
+      <!-- Page 7: Indicative Affordability / Budget Estimator -->
+      <section class="card card-body section-stone" style="margin-bottom:2.5rem;">
+        <span class="eyebrow">Reverse Budget Planner (Zero Sensitive PII Collected)</span>
+        <h2 class="serif-heading" style="font-size:1.75rem;color:var(--navy-900);margin-bottom:0.35rem;">
+          Indicative Property Budget & Affordability Estimator
+        </h2>
+        <p style="font-size:0.86rem;color:var(--slate-600);margin-bottom:1.25rem;">
+          Enter a comfortable monthly EMI commitment and available down payment to estimate an indicative property price band. We never request PAN, Aadhaar, salary slips, or bank account details.
+        </p>
+
+        <div class="grid-2" style="align-items:center;">
+          <div class="grid-2" style="gap:0.85rem;">
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" for="aff-emi">Comfortable Monthly EMI (₹)</label>
+              <input type="number" id="aff-emi" class="form-control mono-num" value="25000" min="5000" step="1000" />
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" for="aff-dp">Available Down Payment (₹)</label>
+              <input type="number" id="aff-dp" class="form-control mono-num" value="700000" min="0" step="50000" />
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" for="aff-tenure">Preferred Tenure (Years)</label>
+              <input type="number" id="aff-tenure" class="form-control mono-num" value="20" min="1" max="30" />
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" for="aff-rate">Assumed Annual Rate (%)</label>
+              <input type="number" id="aff-rate" class="form-control mono-num" value="8.75" min="0" max="20" step="0.1" />
+            </div>
+          </div>
+
+          <div class="card card-body" style="background:var(--bg-surface);">
+            <div style="font-size:0.78rem;color:var(--slate-600);text-transform:uppercase;letter-spacing:0.05em;font-weight:700;">
+              Estimated Indicative Property Budget
+            </div>
+            <div id="aff-budget-out" class="mono-num" style="font-size:2rem;font-weight:700;color:var(--navy-900);margin:0.3rem 0;">
+              ₹35.29 Lakh
+            </div>
+            <div id="aff-loan-out" style="font-size:0.82rem;color:var(--slate-600);margin-bottom:0.85rem;">
+              Includes ~₹28.29 Lakh estimated loan principal + ₹7.00 Lakh down payment.
+            </div>
+            <a href="./properties.html" class="btn btn-primary btn-sm">Explore Sample Listings in This Range →</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- How EMI is Estimated -->
+      <section class="card card-body">
+        <h2 class="serif-heading" style="font-size:1.4rem;margin-bottom:0.4rem;">How EMI Is Estimated</h2>
+        <p style="font-size:0.85rem;color:var(--slate-600);">
+          Standard reducing-balance formula: <code>EMI = P × r × (1 + r)^n / ((1 + r)^n − 1)</code>, where <code>P</code> is principal loan amount, <code>r</code> is monthly interest rate (<code>annualRate / 12 / 100</code>), and <code>n</code> is total monthly instalments (<code>tenureYears × 12</code>). If the interest rate is set to <code>0%</code>, monthly instalment equals <code>P / n</code>. Actual lender terms, floating rate resets, credit eligibility, and statutory charges vary.
+        </p>
+      </section>
+    </div>
+  </main>
+
+  <div id="global-footer"></div>
+
+  <script src="./app.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      initSharedLayout("emi", [{ label: "EMI & Budget Tool", href: "./emi-calculator.html" }]);
+
+      const elPrice = document.getElementById("input-prop-price");
+      const slPrice = document.getElementById("slider-prop-price");
+      const elDpAmt = document.getElementById("input-dp-amount");
+      const elDpPct = document.getElementById("input-dp-percent");
+      const elLoan = document.getElementById("input-loan-amount");
+      const elRate = document.getElementById("input-rate");
+      const slRate = document.getElementById("slider-rate");
+      const elTenure = document.getElementById("input-tenure");
+      const slTenure = document.getElementById("slider-tenure");
+      const dpError = document.getElementById("dp-error");
+
+      // Check URL params for pre-filled property price
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("price")) {
+        const pVal = Number(params.get("price"));
+        if (!isNaN(pVal) && pVal > 0) {
+          elPrice.value = pVal;
+          slPrice.value = Math.min(20000000, pVal);
+          elDpAmt.value = Math.round(pVal * 0.2);
+          elDpPct.value = 20;
+        }
+      }
+      if (params.get("title")) {
+        const ctx = document.getElementById("emi-property-context");
+        ctx.style.display = "block";
+        ctx.innerHTML = `<strong>Calculating Indicative EMI for Sample Property:</strong> ${params.get("title")} (${formatINRLakhCrore(elPrice.value)})`;
+      }
+
+      function syncAndCalculate(source) {
+        let price = Math.max(0, Number(elPrice.value) || 0);
+        if (source === "slider-price") {
+          price = Number(slPrice.value);
+          elPrice.value = price;
+        } else {
+          slPrice.value = Math.min(20000000, price);
+        }
+
+        document.getElementById("price-readable").textContent = formatINRLakhCrore(price);
+
+        let dpAmt = Number(elDpAmt.value) || 0;
+        let dpPct = Number(elDpPct.value) || 0;
+
+        if (source === "dp-pct" || source === "price" || source === "slider-price") {
+          dpPct = Math.min(100, Math.max(0, dpPct));
+          dpAmt = Math.round((price * dpPct) / 100);
+          elDpAmt.value = dpAmt;
+        } else if (source === "dp-amt") {
+          dpPct = price > 0 ? Number(((dpAmt / price) * 100).toFixed(1)) : 0;
+          elDpPct.value = dpPct;
+        }
+
+        if (dpAmt < 0 || dpAmt > price) {
+          dpError.style.display = "block";
+          dpAmt = Math.max(0, Math.min(price, dpAmt));
+        } else {
+          dpError.style.display = "none";
+        }
+
+        const loan = Math.max(0, price - dpAmt);
+        elLoan.value = loan;
+
+        let rate = Number(elRate.value);
+        if (source === "slider-rate") {
+          rate = Number(slRate.value);
+          elRate.value = rate;
+        } else {
+          slRate.value = rate;
+        }
+
+        let tenure = Number(elTenure.value);
+        if (source === "slider-tenure") {
+          tenure = Number(slTenure.value);
+          elTenure.value = tenure;
+        } else {
+          slTenure.value = tenure;
+        }
+
+        const res = calculateEMI(loan, rate, tenure);
+
+        document.getElementById("out-emi").textContent = formatINR(res.emi);
+        document.getElementById("out-tenure-months").textContent = `Across ${res.months} monthly instalments (${tenure} yrs @ ${rate}%)`;
+        document.getElementById("out-principal").textContent = formatINR(res.principal);
+        document.getElementById("out-dp").textContent = formatINR(dpAmt);
+        document.getElementById("out-interest").textContent = formatINR(res.totalInterest);
+        document.getElementById("out-total").textContent = formatINR(res.totalPayable);
+
+        const pRatio = res.totalPayable > 0 ? Math.round((res.principal / res.totalPayable) * 100) : 100;
+        const iRatio = 100 - pRatio;
+        document.getElementById("bar-principal").style.width = `${pRatio}%`;
+        document.getElementById("bar-interest").style.width = `${iRatio}%`;
+        document.getElementById("bar-label-principal").textContent = `Principal: ${pRatio}%`;
+        document.getElementById("bar-label-interest").textContent = `Total Interest: ${iRatio}%`;
+
+        renderScenarioComparison(price, dpPct, rate, tenure);
+      }
+
+      function renderScenarioComparison(price, baseDpPct, baseRate, baseTenure) {
+        const scenarios = [
+          {
+            name: "Scenario A (Current)",
+            dpPct: baseDpPct,
+            rate: baseRate,
+            tenure: baseTenure
+          },
+          {
+            name: "Scenario B (Higher Down Payment)",
+            dpPct: Math.min(90, baseDpPct + 10),
+            rate: baseRate,
+            tenure: baseTenure
+          },
+          {
+            name: "Scenario C (Shorter Tenure)",
+            dpPct: baseDpPct,
+            rate: baseRate,
+            tenure: Math.max(5, baseTenure - 5)
+          }
+        ];
+
+        const computed = scenarios.map(s => {
+          const dp = Math.round((price * s.dpPct) / 100);
+          const loan = Math.max(0, price - dp);
+          return { ...s, dp, loan, ...calculateEMI(loan, s.rate, s.tenure) };
+        });
+
+        document.getElementById("scenario-comparison-table").innerHTML = `
+          <thead>
+            <tr>
+              <th>Parameter</th>
+              ${computed.map(c => `<th>${c.name}</th>`).join("")}
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Down Payment</strong></td>
+              ${computed.map(c => `<td class="mono-num">${formatINR(c.dp)} (${c.dpPct}%)</td>`).join("")}
+            </tr>
+            <tr>
+              <td><strong>Loan Amount</strong></td>
+              ${computed.map(c => `<td class="mono-num">${formatINR(c.loan)}</td>`).join("")}
+            </tr>
+            <tr>
+              <td><strong>Interest Rate & Tenure</strong></td>
+              ${computed.map(c => `<td class="mono-num">${c.rate}% for ${c.tenure} Yrs</td>`).join("")}
+            </tr>
+            <tr>
+              <td><strong>Indicative Monthly EMI</strong></td>
+              ${computed.map(c => `<td class="mono-num" style="color:var(--copper-600);font-weight:700;">${formatINR(c.emi)} / mo</td>`).join("")}
+            </tr>
+            <tr>
+              <td><strong>Total Interest Outgo</strong></td>
+              ${computed.map(c => `<td class="mono-num">${formatINR(c.totalInterest)}</td>`).join("")}
+            </tr>
+          </tbody>
+        `;
+      }
+
+      // Affordability Reverse Calculator
+      function updateAffordability() {
+        const targetEmi = Math.max(0, Number(document.getElementById("aff-emi").value) || 0);
+        const dp = Math.max(0, Number(document.getElementById("aff-dp").value) || 0);
+        const tenureYrs = Math.max(1, Number(document.getElementById("aff-tenure").value) || 20);
+        const annualRate = Math.max(0, Number(document.getElementById("aff-rate").value) || 0);
+        const n = tenureYrs * 12;
+
+        let maxLoan = 0;
+        if (annualRate === 0) {
+          maxLoan = targetEmi * n;
+        } else {
+          const r = annualRate / 12 / 100;
+          const factor = Math.pow(1 + r, n);
+          maxLoan = (targetEmi * (factor - 1)) / (r * factor);
+        }
+
+        const totalBudget = Math.round(maxLoan + dp);
+        document.getElementById("aff-budget-out").textContent = formatINRLakhCrore(totalBudget);
+        document.getElementById("aff-loan-out").textContent = `Includes ~${formatINRLakhCrore(maxLoan)} estimated loan principal + ${formatINRLakhCrore(dp)} down payment.`;
+      }
+
+      elPrice.addEventListener("input", () => syncAndCalculate("price"));
+      slPrice.addEventListener("input", () => syncAndCalculate("slider-price"));
+      elDpAmt.addEventListener("input", () => syncAndCalculate("dp-amt"));
+      elDpPct.addEventListener("input", () => syncAndCalculate("dp-pct"));
+      elRate.addEventListener("input", () => syncAndCalculate("rate"));
+      slRate.addEventListener("input", () => syncAndCalculate("slider-rate"));
+      elTenure.addEventListener("input", () => syncAndCalculate("tenure"));
+      slTenure.addEventListener("input", () => syncAndCalculate("slider-tenure"));
+
+      document.getElementById("emi-reset-btn").addEventListener("click", () => {
+        elPrice.value = 3000000;
+        elDpPct.value = 20;
+        elRate.value = 8.75;
+        elTenure.value = 20;
+        syncAndCalculate("price");
+      });
+
+      ["aff-emi", "aff-dp", "aff-tenure", "aff-rate"].forEach(id => {
+        document.getElementById(id).addEventListener("input", updateAffordability);
+      });
+
+      syncAndCalculate("price");
+      updateAffordability();
+    });
+  </script>
+</body>
+</html>

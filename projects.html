@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Projects & Corridors | Vijay Khavse — Mauli Infra Demo</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div id="global-header"></div>
+
+  <main class="section">
+    <div class="container">
+      <div style="max-width:760px;margin-bottom:2rem;">
+        <span class="eyebrow">Project Portfolio & Corridors</span>
+        <h1 class="serif-heading" style="font-size:2.4rem;color:var(--navy-900);margin-bottom:0.5rem;">
+          Candidate Corridors & Illustrative Project Layouts
+        </h1>
+        <p style="font-size:0.92rem;color:var(--slate-600);">
+          This page separates <strong>Advisor Candidate Corridors (Pending Verification)</strong> from <strong>Illustrative Sample Developments</strong>. None of the projects below represent live RERA-registered Mauli Infra offerings until official inventory is supplied.
+        </p>
+      </div>
+
+      <!-- Corridor Filter Tabs -->
+      <div style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:2rem;" role="tablist" aria-label="Filter projects by corridor">
+        <button type="button" class="btn btn-primary btn-sm corridor-tab" data-corridor="all">All Corridors (4)</button>
+        <button type="button" class="btn btn-outline btn-sm corridor-tab" data-corridor="Wardha Road">Wardha Road</button>
+        <button type="button" class="btn btn-outline btn-sm corridor-tab" data-corridor="MIHAN">MIHAN</button>
+        <button type="button" class="btn btn-outline btn-sm corridor-tab" data-corridor="Besa">Besa</button>
+        <button type="button" class="btn btn-outline btn-sm corridor-tab" data-corridor="Butibori">Butibori</button>
+      </div>
+
+      <!-- Projects Grid -->
+      <div class="grid-2" id="projects-grid"></div>
+    </div>
+  </main>
+
+  <div id="global-footer"></div>
+
+  <script src="./app.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      initSharedLayout("projects", [{ label: "Projects & Corridors", href: "./projects.html" }]);
+
+      const grid = document.getElementById("projects-grid");
+      const tabs = document.querySelectorAll(".corridor-tab");
+
+      function renderProjects(corridorFilter) {
+        const list = corridorFilter === "all"
+          ? DEMO_PROJECTS
+          : DEMO_PROJECTS.filter(p => p.corridor === corridorFilter);
+
+        grid.innerHTML = list.map(proj => {
+          const linkedProps = DEMO_PROPERTIES.filter(item => item.projectId === proj.id);
+          return `
+            <article class="card card-hover" style="display:flex;flex-direction:column;justify-content:space-between;">
+              <div>
+                <div class="prop-media" style="height:185px;">
+                  ${renderArchitecturalSVG("grid-layout", proj.id.toUpperCase())}
+                  <div class="prop-media-overlay-top">
+                    <span class="tag-type">${proj.corridor}, ${proj.city}</span>
+                    <span class="demo-pill">SAMPLE PROJECT</span>
+                  </div>
+                  <div class="prop-media-caption">Illustrative blueprint — not an actual Mauli Infra project photograph</div>
+                </div>
+                <div class="card-body">
+                  <div style="margin-bottom:0.5rem;">
+                    <span class="demo-badge-inline">${proj.advisorRole}</span>
+                  </div>
+                  <h2 class="serif-heading" style="font-size:1.5rem;color:var(--navy-900);margin-bottom:0.35rem;">
+                    ${proj.name}
+                  </h2>
+                  <p style="font-size:0.82rem;font-weight:600;color:var(--copper-600);margin-bottom:0.65rem;">
+                    ${proj.category}
+                  </p>
+                  <p style="font-size:0.88rem;color:var(--slate-600);margin-bottom:1rem;">
+                    ${proj.summary}
+                  </p>
+                  <div class="tbc-box" style="padding:0.65rem 0.85rem;font-size:0.78rem;margin-bottom:0.75rem;">
+                    ${proj.reraNote}
+                  </div>
+                  <div style="font-size:0.82rem;color:var(--slate-700);">
+                    Linked Sample Listings in Demo Dataset: <strong>${linkedProps.length} unit(s)</strong>
+                  </div>
+                </div>
+              </div>
+              <div style="padding:0 1.5rem 1.35rem;display:flex;flex-wrap:wrap;gap:0.6rem;">
+                <a href="./properties.html?area=${encodeURIComponent(proj.corridor)}" class="btn btn-primary btn-sm">
+                  Explore ${proj.corridor} Sample Listings →
+                </a>
+                <a href="./contact.html?property=${encodeURIComponent(proj.name)}" class="btn btn-outline btn-sm">
+                  Enquire About Corridor
+                </a>
+              </div>
+            </article>
+          `;
+        }).join("");
+      }
+
+      tabs.forEach(tab => {
+        tab.addEventListener("click", () => {
+          tabs.forEach(t => {
+            t.classList.remove("btn-primary");
+            t.classList.add("btn-outline");
+          });
+          tab.classList.remove("btn-outline");
+          tab.classList.add("btn-primary");
+          renderProjects(tab.dataset.corridor);
+        });
+      });
+
+      renderProjects("all");
+    });
+  </script>
+</body>
+</html>
